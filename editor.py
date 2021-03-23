@@ -1,7 +1,8 @@
 import argparse
 from pathlib import Path
+from colors import Color
 from inspect import cleandoc
-from moviepy.editor import VideoFileClip
+from validator import Validation
 
 
 def main():
@@ -9,7 +10,7 @@ def main():
     OUTPUT_DIR = BASE_DIR.joinpath('output')
 
     parser = argparse.ArgumentParser(
-        prog='Python CLI Video Editor', description='An application to modify your videos!'
+        prog='Python CLI Video Editor', description='An application to modify vids and more, Made By https://github.com/YassinAO/'
     )
 
     # Make arguments optional by adding - or -- in front of it.
@@ -27,7 +28,7 @@ def main():
 
     parser.add_argument('-m', '--measure',
                         metavar=('size of'),
-                        choices='[small, normal, large]', help='choices: [small, normal, large]',
+                        choices='[small, medium, large]', help='choices: [small, medium, large]',
                         default='small')
 
     parser.add_argument('-p', '--position', metavar=('watermark'),
@@ -37,29 +38,10 @@ def main():
     args = parser.parse_args()
 
     if args.input is None:
-        print(f'missing -i OR --input argument')
+        print(f'{Color.WARNING}missing -i OR --input argument{Color.ENDC}')
     else:
-        pass
-
-
-def check_time():
-    pass
-
-
-def check_position():
-    pass
-
-
-def check_measurement():
-    pass
-
-
-def check_extension():
-    pass
-
-
-def check_path():
-    pass
+        Validation(args.input, args.output, args.start,
+                   args.end, args.measure, args.position).check_path()
 
 
 if __name__ == '__main__':
