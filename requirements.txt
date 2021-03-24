@@ -9,6 +9,7 @@ moviepy==1.0.3
 numpy==1.20.1
 Pillow==8.1.2
 proglog==0.1.9
+pygame==2.0.1
 requests==2.25.1
 tqdm==4.59.0
 urllib3==1.26.4
