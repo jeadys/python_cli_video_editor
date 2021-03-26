@@ -1,11 +1,8 @@
-from .overwrite import check_overwrite
 from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
-from pathlib import Path
+from inspect import cleandoc
 
 
-def create_watermark(f_input, f_output, v_position, h_position, f_measure, f_feature):
-    new_filename = f'watermark-{str(f_input.name)}'
-
+def create_watermark(final_output, f_input, v_position, h_position, f_measure):
     if f_measure == 'small':
         resize = 30
     elif f_measure == 'medium':
@@ -19,6 +16,14 @@ def create_watermark(f_input, f_output, v_position, h_position, f_measure, f_fea
         height=resize).margin(right=8, top=8, left=8, bottom=8, opacity=0).set_pos((h_position, v_position))
 
     final_file = CompositeVideoClip([video, watermark])
-    final_output = f_output.joinpath(new_filename)
+    final_file.write_videofile(str(final_output))
 
-    check_overwrite(final_file, final_output, f_feature, video)
+    video.reader.close()
+    video.audio.reader.close_proc()
+
+
+if __name__ == '__main__':
+    print(cleandoc(f'''
+        Add a watermark to your videos.
+        python editor.py watermark -h, for more info
+    '''))
