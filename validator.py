@@ -6,24 +6,26 @@ from moviepy.editor import VideoFileClip
 
 
 def classInfo():
-    method_list = [attribute for attribute in dir(Validation) if callable(
-        getattr(Validation, attribute)) and attribute.startswith('__') is False]
+    method_list = [attribute for attribute in dir(Validate) if callable(
+        getattr(Validate, attribute)) and attribute.startswith('__') is False]
 
     for method in method_list:
         print(method)
 
 
-class Validation:
-    def __init__(self, f_feature, f_input, f_output, f_starttime, f_endtime, f_measure, f_position):
-        self.f_feature = f_feature
-        self.f_input = Path(f_input)
-        self.f_output = Path(f_output)
-        self.f_starttime = f_starttime
-        self.f_endtime = f_endtime
-        self.f_measure = f_measure.lower()
-        self.v_position, self.h_position = f_position.lower().split('_')
-        self.video = VideoFileClip(str(self.f_input))
-        self.video_length = round(self.video.duration)
+class Validate:
+    def __init__(self, **value):
+        self.command = value['command']
+        self.f_input = Path(value['input'])
+        self.f_output = Path(value['output'])
+        if self.command == 'gif' or self.command == 'watermark':
+            self.f_measure = value['measure'].lower()
+        if self.command == 'gif':
+            self.f_starttime = value['start']
+            self.f_endtime = value['end']
+        elif self.command == 'watermark':
+            self.v_position, self.h_position = value['position'].lower().split(
+                '_')
 
     def check_path(self):
         Path(self.f_output).mkdir(parents=True, exist_ok=True)
@@ -66,9 +68,9 @@ class Validation:
         '''))
 
         if self.f_measure in measurements:
-            if self.f_feature == 'gif':
+            if self.command == 'gif':
                 self.check_time()
-            elif self.f_feature == 'watermark':
+            elif self.command == 'watermark':
                 self.check_position()
         else:
             print(cleandoc(f'''
@@ -76,17 +78,19 @@ class Validation:
             '''))
 
     def check_time(self):
+        video = VideoFileClip(str(self.f_input))
+        video_length = round(video.duration)
+
         print(cleandoc(f'''
         {Color.HEADER}TIME CHECK{Color.ENDC}
-        length      (seconds)    {self.video_length}
+        length      (seconds)    {video_length}
         start       (seconds)    {self.f_starttime}
         end         (seconds)    {self.f_endtime}
         '''))
 
-        if self.f_starttime >= 0 and self.f_starttime < self.video_length and self.f_endtime > 0 and self.f_endtime < self.video_length and self.f_starttime < self.f_endtime:
-            gif.create_gif(self.f_input, self.f_output,
-                           self.f_starttime, self.f_endtime, self.f_measure, self.f_feature)
-        elif self.f_starttime > self.video_length or self.f_endtime > self.video_length:
+        if self.f_starttime >= 0 and self.f_starttime < video_length and self.f_endtime > 0 and self.f_endtime < video_length and self.f_starttime < self.f_endtime:
+            self.check_overwrite()
+        elif self.f_starttime > video_length or self.f_endtime > video_length:
             print(
                 f'{Color.WARNING}STARTTIME OR ENDTIME CAN NOT BE BIGGER THAN VIDEO LENGTH{Color.ENDC}')
         elif self.f_starttime > self.f_endtime:
@@ -101,9 +105,6 @@ class Validation:
         else:
             print(f'{Color.ERROR}TRY AGAIN{Color.ENDC}')
 
-        self.video.reader.close()
-        self.video.audio.reader.close_proc()
-
     def check_position(self):
         v_pos = ['bottom', 'top']
         h_pos = ['left', 'right']
@@ -115,12 +116,52 @@ class Validation:
         '''))
 
         if self.v_position in v_pos and self.h_position in h_pos:
-            watermark.create_watermark(self.f_input, self.f_output,
-                                       self.v_position, self.h_position, self.f_measure, self.f_feature)
+            self.check_overwrite()
         else:
             print(cleandoc(f'''
             {Color.WARNING}POSITION {self.v_position} {self.h_position} INVALID{Color.ENDC}
             '''))
+
+    def check_overwrite(self):
+        if self.command == 'gif':
+            new_filename = str(self.f_input.name).replace(
+                str(self.f_input.suffix), '.gif')
+        elif self.command == 'watermark':
+            new_filename = f'watermark-{str(self.f_input.name)}'
+
+        final_output = self.f_output.joinpath(new_filename)
+
+        print(cleandoc(f'''
+        {Color.HEADER}OVERWRITE CHECK{Color.ENDC}
+        name        (file)       {final_output.name}
+        dir         (folder)     {final_output}
+        '''))
+
+        while True:
+            if final_output.is_file():
+                overwrite = input(
+                    f'{Color.WARNING}{final_output.name} already exists in this directory. Overwrite ?{Color.ENDC} [y/N] ')
+                if overwrite.lower() == 'y':
+                    if self.command == 'gif':
+                        gif.create_gif(
+                            final_output, self.f_input, self.f_starttime, self.f_endtime, self.f_measure)
+                    elif self.command == 'watermark':
+                        watermark.create_watermark(
+                            final_output, self.f_input, self.v_position, self.h_position, self.f_measure)
+                    break
+                elif overwrite.lower() == 'n':
+                    print(f'{Color.OKGREEN}exiting...{Color.ENDC}')
+                    break
+                else:
+                    continue
+            else:
+                if self.command == 'gif':
+                    gif.create_gif(final_output, self.f_input,
+                                   self.f_starttime, self.f_endtime, self.f_measure)
+                elif self.command == 'watermark':
+                    watermark.create_watermark(
+                        final_output, self.f_input, self.v_position, self.h_position, self.f_measure)
+                break
 
 
 if __name__ == '__main__':
