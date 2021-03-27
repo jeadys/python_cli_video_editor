@@ -1,3 +1,4 @@
+import sys
 import argparse
 from pathlib import Path
 from colors import Color
@@ -7,14 +8,15 @@ from validator import Validate
 
 def argument_parser():
     BASE_DIR = Path(__file__).resolve().parent
-    OUTPUT_DIR = BASE_DIR.joinpath('output')
 
     parent_parser = argparse.ArgumentParser(
         prog='Python CLI Video Editor', description='An application to modify vids and more, Made By https://github.com/YassinAO/', add_help=False
     )
     # These commands can be used with any subcommand.
     parent_parser.add_argument('-i', '--input')
-    parent_parser.add_argument('-o', '--output', default=OUTPUT_DIR)
+    parent_parser.add_argument('-o', '--output')
+    parent_parser.add_argument('--overwrite', action='store_true')
+    parent_parser.add_argument('--fps', type=int)
 
     main_parser = argparse.ArgumentParser()
 
@@ -27,6 +29,7 @@ def argument_parser():
     gif_parser.add_argument('-e', '--end', type=int, default=10)
     gif_parser.add_argument('-m', '--measure', default='small',
                             help='choices: small, medium, large')
+    gif_parser.add_argument('--sway', action='store_true')
 
     watermark_parser = feature_subparsers.add_parser(
         'watermark', parents=[parent_parser])  # Parent is defined to get access to the parent's commands within this subcommand.
@@ -45,8 +48,11 @@ def argument_parser():
     if args.input is None:
         print(cleandoc(f'''
         {Color.WARNING}missing -i OR --input argument{Color.ENDC}'''))
-    else:
-        Validate(**args_dict).check_path()
+        sys.exit()
+    elif args.output is None:
+        args.output = BASE_DIR.joinpath('output', args.command)
+
+    Validate(**args_dict).check_path()
 
 
 if __name__ == '__main__':

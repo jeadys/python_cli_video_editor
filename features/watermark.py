@@ -1,8 +1,8 @@
-from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 from inspect import cleandoc
+from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 
 
-def create_watermark(final_output, f_input, v_position, h_position, f_measure):
+def create_watermark(final_output, f_input, v_position, h_position, f_measure, f_fps):
     if f_measure == 'small':
         resize = 30
     elif f_measure == 'medium':
@@ -16,7 +16,7 @@ def create_watermark(final_output, f_input, v_position, h_position, f_measure):
         height=resize).margin(right=8, top=8, left=8, bottom=8, opacity=0).set_pos((h_position, v_position))
 
     final_file = CompositeVideoClip([video, watermark])
-    final_file.write_videofile(str(final_output))
+    final_file.write_videofile(str(final_output), fps=f_fps)
 
     video.reader.close()
     video.audio.reader.close_proc()
