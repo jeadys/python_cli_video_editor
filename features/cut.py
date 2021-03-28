@@ -1,10 +1,11 @@
+import overwrite
 from pathlib import Path
 from inspect import cleandoc
 from datetime import datetime
-from moviepy.editor import VideoFileClip
+from moviepy.editor import VideoFileClip, CompositeVideoClip
 
 
-def create_cut(f_input, f_output, f_parts, video_duration, f_fps):
+def create_cut(f_input, f_output, f_parts, video_duration, f_fps, f_overwrite):
     part_duration = 0
     start_part = [0]
     end_part = []
@@ -20,8 +21,10 @@ def create_cut(f_input, f_output, f_parts, video_duration, f_fps):
 
         new_filename = f'part-{f_part + 1}-of-{f_parts}-{str(f_input.name)}'
         final_output = f_output.joinpath(new_filename)
+        final_file = CompositeVideoClip([video])
 
-        video.write_videofile(str(final_output), fps=f_fps)
+        if f_overwrite or overwrite.check_overwrite(final_output):
+            final_file.write_videofile(str(final_output), fps=f_fps)
 
         video.reader.close()
         video.audio.reader.close_proc()
