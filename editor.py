@@ -1,9 +1,9 @@
 import sys
 import argparse
 from pathlib import Path
-from colors import Color
 from inspect import cleandoc
-from validator import Validate
+from validations.validator import Validate
+from validations.colors import Color
 
 
 def argument_parser():
@@ -41,6 +41,10 @@ def argument_parser():
     cut_parser = feature_subparsers.add_parser(
         'cut', parents=[parent_parser])  # Parent is defined to get access to the parent's commands within this subcommand.
     cut_parser.add_argument('-p', '--parts', type=int, default=2)
+
+    audio_parser = feature_subparsers.add_parser(
+        'audio', parents=[parent_parser])
+    audio_parser.add_argument('--export', action='store_true')
 
     args = main_parser.parse_args()
     args_dict = vars(args)

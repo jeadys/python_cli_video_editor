@@ -1,8 +1,11 @@
-from colors import Color
 from pathlib import Path
 from inspect import cleandoc
-from features import gif, watermark, cut
+from features.gif import create_gif
+from features.cut import create_cut
+from validations.colors import Color
 from moviepy.editor import VideoFileClip
+from features.audio.export import export_audio
+from features.watermark import create_watermark
 
 
 def classInfo():
@@ -61,7 +64,9 @@ class Validate:
             if self.command == 'gif' or self.command == 'watermark':
                 return self.check_measurement()
             elif self.command == 'cut':
-                return self.set_naming()
+                return create_cut(self.f_input, self.f_output, self.f_parts, self.video_duration, self.f_fps, self.f_overwrite)
+            elif self.command == 'audio':
+                return export.export_audio(self.video, self.f_input, self.f_output, self.f_overwrite)
             else:
                 pass  # DO SOMETHING
         elif self.f_input.suffix in photo_extensions:
@@ -98,7 +103,7 @@ class Validate:
         '''))
 
         if self.f_starttime >= 0 and self.f_starttime < self.video_duration and self.f_endtime > 0 and self.f_endtime < self.video_duration and self.f_starttime < self.f_endtime:
-            self.set_naming()
+            return create_gif(self.f_input, self.f_output, self.f_starttime, self.f_endtime, self.f_measure, self.sway, self.f_fps, self.f_overwrite)
         elif self.f_starttime > self.video_duration or self.f_endtime > self.video_duration:
             print(
                 f'{Color.WARNING}STARTTIME OR ENDTIME CAN NOT BE BIGGER THAN VIDEO LENGTH{Color.ENDC}')
@@ -125,60 +130,11 @@ class Validate:
         '''))
 
         if self.v_position in v_pos and self.h_position in h_pos:
-            self.set_naming()
+            return create_watermark(self.f_input, self.f_output, self.v_position, self.h_position, self.f_measure, self.f_fps, self.f_overwrite)
         else:
             print(cleandoc(f'''
             {Color.WARNING}POSITION {self.v_position} {self.h_position} INVALID{Color.ENDC}
             '''))
-
-    def set_naming(self):
-        if self.command == 'gif':
-            if self.sway:
-                new_filename = f'sway-{str(self.f_input.name)}'.replace(
-                    str(self.f_input.suffix), '.gif')
-            else:
-                new_filename = str(self.f_input.name).replace(
-                    str(self.f_input.suffix), '.gif')
-        elif self.command == 'watermark':
-            new_filename = f'watermark-{str(self.f_input.name)}'
-        elif self.command == 'cut':
-            return cut.create_cut(self.f_input, self.f_output, self.f_parts, self.video_duration, self.f_fps)
-
-        final_output = self.f_output.joinpath(new_filename)
-        return self.check_overwrite(final_output)
-
-    def check_overwrite(self, final_output):
-        print(cleandoc(f'''
-        {Color.HEADER}OVERWRITE CHECK{Color.ENDC}
-        name        (file)       {final_output.name}
-        dir         (folder)     {final_output}
-        '''))
-
-        while True:
-            if final_output.is_file() and self.f_overwrite is False:
-                overwrite = input(
-                    f'{Color.WARNING}{final_output.name} already exists in this directory. Overwrite ?{Color.ENDC} [y/N] ')
-                if overwrite.lower() == 'y':
-                    if self.command == 'gif':
-                        return gif.create_gif(
-                            final_output, self.f_input, self.f_starttime, self.f_endtime, self.f_measure, self.sway, self.f_fps)
-                    elif self.command == 'watermark':
-                        return watermark.create_watermark(
-                            final_output, self.f_input, self.v_position, self.h_position, self.f_measure, self.f_fps)
-                    break
-                elif overwrite.lower() == 'n':
-                    print(f'{Color.OKGREEN}exiting...{Color.ENDC}')
-                    break
-                else:
-                    continue
-            else:
-                if self.command == 'gif':
-                    return gif.create_gif(final_output, self.f_input,
-                                          self.f_starttime, self.f_endtime, self.f_measure, self.sway, self.f_fps)
-                elif self.command == 'watermark':
-                    return watermark.create_watermark(
-                        final_output, self.f_input, self.v_position, self.h_position, self.f_measure, self.f_fps)
-                break
 
 
 if __name__ == '__main__':
