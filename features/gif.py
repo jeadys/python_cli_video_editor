@@ -1,5 +1,5 @@
-import overwrite
 from inspect import cleandoc
+from validations.overwrite import check_overwrite
 from moviepy.editor import VideoFileClip, CompositeVideoClip, concatenate, vfx
 
 
@@ -31,7 +31,7 @@ def create_gif(f_input, f_output, f_starttime, f_endtime, f_measure, sway, f_fps
     final_output = f_output.joinpath(new_filename)
     final_file = CompositeVideoClip([video])
 
-    if f_overwrite or overwrite.check_overwrite(final_output):
+    if f_overwrite or check_overwrite(final_output):
         final_file.write_gif(str(final_output), fps=f_fps)
 
     # video.reader.close()

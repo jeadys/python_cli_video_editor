@@ -1,7 +1,6 @@
-from colors import Color
 from pathlib import Path
 from inspect import cleandoc
-import features.audio.export
+from validations.colors import Color
 
 
 def check_overwrite(final_output):

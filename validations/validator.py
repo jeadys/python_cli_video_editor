@@ -1,9 +1,11 @@
-from colors import Color
 from pathlib import Path
 from inspect import cleandoc
-from features.audio import export
-from features import gif, watermark, cut
+from features.gif import create_gif
+from features.cut import create_cut
+from validations.colors import Color
 from moviepy.editor import VideoFileClip
+from features.audio.export import export_audio
+from features.watermark import create_watermark
 
 
 def classInfo():
@@ -62,7 +64,7 @@ class Validate:
             if self.command == 'gif' or self.command == 'watermark':
                 return self.check_measurement()
             elif self.command == 'cut':
-                return cut.create_cut(self.f_input, self.f_output, self.f_parts, self.video_duration, self.f_fps, self.f_overwrite)
+                return create_cut(self.f_input, self.f_output, self.f_parts, self.video_duration, self.f_fps, self.f_overwrite)
             elif self.command == 'audio':
                 return export.export_audio(self.video, self.f_input, self.f_output, self.f_overwrite)
             else:
@@ -101,7 +103,7 @@ class Validate:
         '''))
 
         if self.f_starttime >= 0 and self.f_starttime < self.video_duration and self.f_endtime > 0 and self.f_endtime < self.video_duration and self.f_starttime < self.f_endtime:
-            return gif.create_gif(self.f_input, self.f_output, self.f_starttime, self.f_endtime, self.f_measure, self.sway, self.f_fps, self.f_overwrite)
+            return create_gif(self.f_input, self.f_output, self.f_starttime, self.f_endtime, self.f_measure, self.sway, self.f_fps, self.f_overwrite)
         elif self.f_starttime > self.video_duration or self.f_endtime > self.video_duration:
             print(
                 f'{Color.WARNING}STARTTIME OR ENDTIME CAN NOT BE BIGGER THAN VIDEO LENGTH{Color.ENDC}')
@@ -128,7 +130,7 @@ class Validate:
         '''))
 
         if self.v_position in v_pos and self.h_position in h_pos:
-            return watermark.create_watermark(self.f_input, self.f_output, self.v_position, self.h_position, self.f_measure, self.f_fps, self.f_overwrite)
+            return create_watermark(self.f_input, self.f_output, self.v_position, self.h_position, self.f_measure, self.f_fps, self.f_overwrite)
         else:
             print(cleandoc(f'''
             {Color.WARNING}POSITION {self.v_position} {self.h_position} INVALID{Color.ENDC}

@@ -1,9 +1,9 @@
 import sys
 import argparse
 from pathlib import Path
-from colors import Color
 from inspect import cleandoc
-from validator import Validate
+from validations.validator import Validate
+from validations.colors import Color
 
 
 def argument_parser():

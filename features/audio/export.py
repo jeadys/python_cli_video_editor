@@ -1,4 +1,4 @@
-import overwrite
+from validations.overwrite import check_overwrite
 
 
 def export_audio(video, f_input, f_output, f_overwrite):
@@ -7,5 +7,5 @@ def export_audio(video, f_input, f_output, f_overwrite):
         str(f_input.suffix), '.wav')
     final_output = f_output.joinpath(new_filename)
 
-    if f_overwrite or overwrite.check_overwrite(final_output):
+    if f_overwrite or check_overwrite(final_output):
         audio.write_audiofile(str(final_output))

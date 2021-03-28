@@ -1,7 +1,7 @@
-import overwrite
 from pathlib import Path
 from inspect import cleandoc
 from datetime import datetime
+from validations.overwrite import check_overwrite
 from moviepy.editor import VideoFileClip, CompositeVideoClip
 
 
@@ -23,7 +23,7 @@ def create_cut(f_input, f_output, f_parts, video_duration, f_fps, f_overwrite):
         final_output = f_output.joinpath(new_filename)
         final_file = CompositeVideoClip([video])
 
-        if f_overwrite or overwrite.check_overwrite(final_output):
+        if f_overwrite or check_overwrite(final_output):
             final_file.write_videofile(str(final_output), fps=f_fps)
 
         video.reader.close()
