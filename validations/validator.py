@@ -3,6 +3,7 @@ from inspect import cleandoc
 from features.gif import create_gif
 from features.cut import create_cut
 from validations.colors import Color
+from validations.convert import convert_to_seconds, convert_to_hms
 from moviepy.editor import VideoFileClip
 from features.audio.export import export_audio
 from features.watermark import create_watermark
@@ -28,8 +29,8 @@ class Validate:
         if self.command == 'gif' or self.command == 'watermark':
             self.f_measure = value['measure'].lower()
         if self.command == 'gif':
-            self.f_starttime = value['start']
-            self.f_endtime = value['end']
+            self.f_starttime = convert_to_seconds(value['start'])
+            self.f_endtime = convert_to_seconds(value['end'])
             self.sway = value['sway']
         elif self.command == 'watermark':
             self.v_position, self.h_position = value['position'].lower().split(
@@ -95,29 +96,33 @@ class Validate:
             '''))
 
     def check_time(self):
-        print(cleandoc(f'''
-        {Color.HEADER}TIME CHECK{Color.ENDC}
-        length      (seconds)    {self.video_duration}
-        start       (seconds)    {self.f_starttime}
-        end         (seconds)    {self.f_endtime}
-        '''))
+        if self.f_starttime and self.f_endtime is not False:
 
-        if self.f_starttime >= 0 and self.f_starttime < self.video_duration and self.f_endtime > 0 and self.f_endtime < self.video_duration and self.f_starttime < self.f_endtime:
-            return create_gif(self.f_input, self.f_output, self.f_starttime, self.f_endtime, self.f_measure, self.sway, self.f_fps, self.f_overwrite)
-        elif self.f_starttime > self.video_duration or self.f_endtime > self.video_duration:
-            print(
-                f'{Color.WARNING}STARTTIME OR ENDTIME CAN NOT BE BIGGER THAN VIDEO LENGTH{Color.ENDC}')
-        elif self.f_starttime > self.f_endtime:
-            print(
-                f'{Color.WARNING}STARTTIME CAN NOT BE BIGGER THAN ENDTIME{Color.ENDC}')
-        elif self.f_starttime < self.f_endtime < 0:
-            print(
-                f'{Color.WARNING}STARTTIME OR ENDTIME CAN NOT BE NEGATIVE NUMBERS{Color.ENDC}')
-        elif self.f_starttime == self.f_endtime:
-            print(
-                f'{Color.WARNING}STARTTIME AND ENDTIME CAN NOT BE EQUAL{Color.ENDC}')
+            print(cleandoc(f'''
+            {Color.HEADER}TIME CHECK{Color.ENDC}
+            length      (seconds)    {self.video_duration}
+            start       (seconds)    {self.f_starttime}
+            end         (seconds)    {self.f_endtime}
+            '''))
+
+            if self.f_starttime >= 0 and self.f_starttime < self.video_duration and self.f_endtime > 0 and self.f_endtime < self.video_duration and self.f_starttime < self.f_endtime:
+                return create_gif(self.f_input, self.f_output, self.f_starttime, self.f_endtime, self.f_measure, self.sway, self.f_fps, self.f_overwrite)
+            elif self.f_starttime > self.video_duration or self.f_endtime > self.video_duration:
+                print(
+                    f'{Color.WARNING}STARTTIME OR ENDTIME CAN NOT BE BIGGER THAN VIDEO LENGTH{Color.ENDC}')
+            elif self.f_starttime > self.f_endtime:
+                print(
+                    f'{Color.WARNING}STARTTIME CAN NOT BE BIGGER THAN ENDTIME{Color.ENDC}')
+            elif self.f_starttime < self.f_endtime < 0:
+                print(
+                    f'{Color.WARNING}STARTTIME OR ENDTIME CAN NOT BE NEGATIVE NUMBERS{Color.ENDC}')
+            elif self.f_starttime == self.f_endtime:
+                print(
+                    f'{Color.WARNING}STARTTIME AND ENDTIME CAN NOT BE EQUAL{Color.ENDC}')
+            else:
+                print(f'{Color.ERROR}TRY AGAIN{Color.ENDC}')
         else:
-            print(f'{Color.ERROR}TRY AGAIN{Color.ENDC}')
+            print(f'{Color.WARNING}USE HH:MM:SS TIME FORMAT{Color.ENDC}')
 
     def check_position(self):
         v_pos = ['bottom', 'top']
