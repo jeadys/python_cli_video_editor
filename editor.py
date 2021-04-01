@@ -25,8 +25,8 @@ def argument_parser():
 
     gif_parser = feature_subparsers.add_parser(
         'gif', parents=[parent_parser])  # Parent is defined to get access to the parent's commands within this subcommand.
-    gif_parser.add_argument('-s', '--start', type=int, default=1)
-    gif_parser.add_argument('-e', '--end', type=int, default=10)
+    gif_parser.add_argument('-s', '--start', default='00:00:5')
+    gif_parser.add_argument('-e', '--end', default='00:00:10')
     gif_parser.add_argument('-m', '--measure', default='small',
                             help='choices: small, medium, large')
     gif_parser.add_argument('--sway', action='store_true')
