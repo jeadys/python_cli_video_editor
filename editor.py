@@ -46,6 +46,10 @@ def argument_parser():
         'audio', parents=[parent_parser])
     audio_parser.add_argument('--export', action='store_true')
 
+    snapshot_parser = feature_subparsers.add_parser(
+        'snapshot', parents=[parent_parser])
+    snapshot_parser.add_argument('--interval', type=int, default=1)
+
     args = main_parser.parse_args()
     args_dict = vars(args)
 
