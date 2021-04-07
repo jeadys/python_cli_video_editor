@@ -5,20 +5,13 @@ This repo has many functionalities that can be used to edit/manipulate your vide
 Libraries/modules such as [MoviePy](https://github.com/Zulko/moviepy)
 and [FFMPEG](https://github.com/FFmpeg/FFmpeg) are being used to get most of the work done.
 
-Feel free to make use of this project!
+Also interested in image editing? Check out [python_cli_image_editor](https://github.com/YassinAO/python_cli_image_editor)
 
-## prerequisite
+## Prerequisite
 * Python v.3+
 * MoviePy
 * FFMPEG
 * PyGame (If you want to see previews)
-* ImageMagick (If you want to add text to gifs)
-
-    ### Notes
-    Imagemagick is automaticly detected by MoviePy except on Windows systems.
-    Navigate to `moviepy/config_defaults.py` and provide the path to the IMAGEMAGICK_BINARY named convert. See example below!
-
-    IMAGEMAGICK_BINARY = `"C:\\Program Files\\ImageMagick_VERSION\\convert.exe"`
 
 ## Install
 ```
@@ -27,56 +20,128 @@ $ cd python_cli_video_editor
 $ pip install -r requirements.txt 
 ```
 
-## Usage
+## Usage / Examples
+You can leave the -o OR --output argument out of the command to use the default location. Folder named 'output' within this project. 
+### create gif
+
 ```
-required arguments:
-    -i, --input            absolute path to file [TIP: Drag & drop a file in the terminal to get the path]
-                           (e.g.) -i C:\Users\John\Desktop\Intro.mp4
+     $ python editor.py gif --input C:\Users\John\Desktop\Intro.mp4 --output C:\Users\John\Desktop\ --start 00:00:06 --end 00:00:09 --measure large
+```
 
-    -f --feature           Task you want to apply on file [options: gif, watermark]
-                           (e.g.) -f gif
-optional arguments:
-    -h, --help             Show this help message and exit
+### add watermark
+```
+     $ python editor.py watermark --input C:\Users\John\Desktop\Intro.mp4 --output C:\Users\John\Desktop\ --position top_right --measure large
+```
 
-    -o, --output           Absolute path to file [TIP: Drag & drop a file in the terminal to get the path]
-                           (e.g.) -o C:\Users\John\Desktop\
-                           Default value = output folder within project
+### cut video in to parts
+```
+     $ python editor.py cut --input C:\Users\John\Desktop\Intro.mp4 --output C:\Users\John\Desktop\ --parts 6 
+```
 
-    -s --start             starttime of video [give time in seconds]
-                           (e.g.) -s 60
-                           Default value = 1
+### export audio from video
+```
+     $ python editor.py audio --input C:\Users\John\Desktop\Intro.mp4 --output C:\Users\John\Desktop\ --export 
+```
 
-    -e --end               endtime of video [give time in seconds]
-                           (e.g.) -s 70
-                           Default value = 3
+### make video snapshots
+```
+     $ python editor.py snapshot --input C:\Users\John\Desktop\Intro.mp4 --output C:\Users\John\Desktop\ --interval 10 
+```
 
-    -m --measure           size of the gif and/or watermark [options: small, medium, large]
-                           (e.g.) -m large
-                           Default value = small
+## Commands
+```
+The main arguments are used in combination with the subcommands/arguments
 
-    -p --position          Position of watermark [options: top_left, top_right, bottom_left, bottom_right]
-                           (e.g.) -p top_left
-                           Default value = bottom_right
+required main arguments:
+    -i, --input            absolute path to file, tip [drag & drop a file in the terminal to get the path]
+                           (e.g.) --input C:\Users\John\Desktop\Intro.mp4
 
-    --preview              See preview of edit [no values are needed for this argument]
+optional main arguments:
+    -o, --output           absolute path to folder, tip [drag & drop a folder in the terminal to get the path]
+                           (e.g.) --output C:\Users\John\Desktop\
+                           default = output folder within project
+
+    -h, --help             show this help message and exit
+                           (e.g.) --help
+
+    --overwrite            overwrite existing file with new file [no values needed]
+                           (e.g.) --overwrite
+
+    --fps                  set new fps for video
+                           (e.g.) --fps 30
+    
+
+    --preview              see preview of edit [no values needed]
                            (e.g.) --preview 
+    
+optional arguments gif subcommand:
 
-```
-### Example creating gif
-You can leave the -o OR --output argument out of the command to use the default location. Folder named 'output' within this project. 
-```
-     $ python editor.py -i C:\Users\John\Desktop\Intro.mp4 -o C:\Users\John\Desktop\ -s 6 -e 9 -m large --preview
-```
+    gif                    allows use of the gif feature and the subcommands
+                           (e.g.) gif <subcommands>
 
-### Example adding watermark
-You can leave the -o OR --output argument out of the command to use the default location. Folder named 'output' within this project. 
-```
-     $ python editor.py -i C:\Users\John\Desktop\Intro.mp4 -o C:\Users\John\Desktop\ -p top_right -m large --preview
+    -s --start             starttime of video [give time in HH:MM:SS]
+                           (e.g.) --start 00:00:10
+                           default = 00:00:05
+
+    -e --end               endtime of video [give time in HH:MM:SS]
+                           (e.g.) --end 00:00:20
+                           default = 00:00:10
+
+    -m --measure           size of the gif, options [small, medium, large]
+                           (e.g.) -measure large
+                           default = small
+    
+    --sway                 plays the gif forward then backward [no values needed]
+                           (e.g.) --sway
+
+
+optional arguments watermark subcommand:
+
+    watermark              allows use of the watermark feature and the subcommands
+                           watermark <subcommands>
+
+    -p --position          position of watermark, options [top_left, top_right, bottom_left, bottom_right]
+                           (e.g.) --position top_left
+                           default = bottom_right
+
+    -m --measure           size of the watermark, options [small, medium, large]
+                           (e.g.) --measure large
+                           default = small                           
+
+optional arguments cut subcommand:
+
+    cut                    allows use of the cut feature and the subcommands
+                           cut <subcommands>
+
+    -p --parts             The amount of video parts you want to cut the video in
+                           (e.g.) --parts 6
+                           default = 2
+
+optional arguments audio subcommand:
+
+    audio                  allows use of the audio feature and the subcommands
+                           audio <subcommands>
+
+    --export               export the audio from a video [no values needed]
+                           (e.g.) --export
+
+optional arguments snapshot subcommand:
+
+    snapshot               allows use of the snapshot feature and the subcommands
+                           snapshot <subcommands>
+
+    --interval             the interval in seconds when you want to make snaphots from the video
+                           (e.g.) --interval 10
+                           default = 1
+
 ```
 
 ## Current functionalities
 * Add watermark to video [option to choose size & position of watermark]
-* Create gif from video  [option to choose size & start/endtime of gif]
+* Create gif from video  [option to choose size, type & start/endtime of gif]
+* Cut video in to multiple parts
+* Export audio from video
+* Make snapshots from video
 
 ## Future functionalities
 * A lot...

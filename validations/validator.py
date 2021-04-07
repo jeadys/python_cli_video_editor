@@ -7,6 +7,7 @@ from validations.convert import convert_to_seconds, convert_to_hms
 from moviepy.editor import VideoFileClip
 from features.audio.export import export_audio
 from features.watermark import create_watermark
+from features.snapshot import create_snapshot
 
 
 def classInfo():
@@ -37,6 +38,8 @@ class Validate:
                 '_')
         elif self.command == 'cut':
             self.f_parts = value['parts']
+        elif self.command == 'snapshot':
+            self.f_interval = value['interval']
 
     def check_path(self):
         Path(self.f_output).mkdir(parents=True, exist_ok=True)
@@ -67,7 +70,9 @@ class Validate:
             elif self.command == 'cut':
                 return create_cut(self.f_input, self.f_output, self.f_parts, self.video_duration, self.f_fps, self.f_overwrite)
             elif self.command == 'audio':
-                return export.export_audio(self.video, self.f_input, self.f_output, self.f_overwrite)
+                return export_audio(self.video, self.f_input, self.f_output, self.f_overwrite)
+            elif self.command == 'snapshot':
+                return create_snapshot(self.video, self.f_input, self.f_output, self.video_duration, self.f_interval, self.f_overwrite)
             else:
                 pass  # DO SOMETHING
         elif self.f_input.suffix in photo_extensions:
