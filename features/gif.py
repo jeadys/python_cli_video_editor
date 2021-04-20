@@ -8,22 +8,21 @@ def time_symetrize(video):
 
 
 def create_gif(f_input, f_output, f_starttime, f_endtime, f_measure, sway, f_fps, f_overwrite):
-    if f_measure == 'small':
-        resize = 0.3
-    elif f_measure == 'medium':
-        resize = 0.6
-    elif f_measure == 'large':
-        resize = 0.9
+    resize = {
+        'small': 0.3,
+        'medium': 0.6,
+        'large': 0.9,
+    }
 
     if sway:
         video = (VideoFileClip(str(f_input))).subclip(
-            f_starttime, f_endtime).resize(resize).fx(time_symetrize)
+            f_starttime, f_endtime).resize(resize[f_measure]).fx(time_symetrize)
 
         new_filename = f'sway-{str(f_input.name)}'.replace(
             str(f_input.suffix), '.gif')
     else:
         video = (VideoFileClip(str(f_input))).subclip(
-            f_starttime, f_endtime).resize(resize)
+            f_starttime, f_endtime).resize(resize[f_measure])
 
         new_filename = str(f_input.name).replace(
             str(f_input.suffix), '.gif')
