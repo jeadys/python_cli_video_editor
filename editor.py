@@ -38,15 +38,15 @@ def argument_parser():
     gif_parser.add_argument('-e', '--end', nargs='?',
                             default='00:00:10', const='00:00:10')
     gif_parser.add_argument('-m', '--measure', nargs='?',
-                            default='small', const='small', help='choices: small, medium, large')
+                            default='small', const='small', choices=['small', 'medium', 'large'])
     gif_parser.add_argument('--sway', action='store_true')
 
     watermark_parser = feature_subparsers.add_parser(
         'watermark', parents=[parent_parser])
     watermark_parser.add_argument('-p', '--position', nargs='?',
-                                  default='bottom_right', const='bottom_right', help='choices: top_left, top_right, bottom_left, bottom_right')
+                                  default='bottom_right', const='bottom_right', choices=['top_left', 'top_right', 'bottom_left', 'bottom_right'])
     watermark_parser.add_argument('-m', '--measure', nargs='?',
-                                  default='small', const='small', help='choices: small, medium, large')
+                                  default='small', const='small', choices=['small', 'medium', 'large'])
 
     cut_parser = feature_subparsers.add_parser(
         'cut', parents=[parent_parser])
@@ -55,7 +55,8 @@ def argument_parser():
 
     audio_parser = feature_subparsers.add_parser(
         'audio', parents=[parent_parser])
-    audio_parser.add_argument('--export', action='store_true')
+    audio_parser.add_argument('--export', type=str, nargs='?',
+                              default='.wav', const='.wav', choices=['.wav', '.mp3'])
 
     snapshot_parser = feature_subparsers.add_parser(
         'snapshot', parents=[parent_parser])
@@ -68,6 +69,10 @@ def argument_parser():
     if args.input is None:
         print(cleandoc(f'''
         {Color.WARNING}missing -i OR --input argument{Color.ENDC}'''))
+        sys.exit()
+    elif args.command == 'gif' and args.bulk:
+        print(cleandoc(f'''
+        {Color.WARNING}gif feature doesn't support bulk manipulation.{Color.ENDC}'''))
         sys.exit()
     elif args.output is None:
         args.output = BASE_DIR.joinpath('output', args.command)

@@ -1,40 +1,49 @@
+import concurrent.futures
+from pathlib import Path
 from inspect import cleandoc
 from validations.overwrite import check_overwrite
 from moviepy.editor import VideoFileClip, CompositeVideoClip, concatenate, vfx
 
 
-def time_symetrize(video):
-    return concatenate([video, video.fx(vfx.time_mirror)])
+class Gif:
+    def __init__(self, files, f_output, f_starttime, f_endtime, f_measure, sway, f_fps, f_overwrite):
+        self.files = files
+        self.f_output = f_output
+        self.f_starttime = f_starttime
+        self.f_endtime = f_endtime
+        self.f_measure = f_measure
+        self.sway = sway
+        self.f_fps = f_fps
+        self.f_overwrite = f_overwrite
+        self.resize = {'small': 0.3, 'medium': 0.6, 'large': 0.9}
 
+    def time_symetrize(self, video):
+        return concatenate([video, video.fx(vfx.time_mirror)])
 
-def create_gif(f_input, f_output, f_starttime, f_endtime, f_measure, sway, f_fps, f_overwrite):
-    resize = {
-        'small': 0.3,
-        'medium': 0.6,
-        'large': 0.9,
-    }
+    def process_gif(self, file):
+        video = VideoFileClip(str(file)).subclip(
+            self.f_starttime, self.f_endtime).resize(self.resize[self.f_measure])
 
-    if sway:
-        video = (VideoFileClip(str(f_input))).subclip(
-            f_starttime, f_endtime).resize(resize[f_measure]).fx(time_symetrize)
+        if self.sway:
+            video = video.fx(self.time_symetrize)
+            new_filename = f'sway_{str(file.name)}'.replace(
+                str(file.suffix), '.gif')
+        else:
+            new_filename = str(file.name).replace(
+                str(file.suffix), '.gif')
 
-        new_filename = f'sway-{str(f_input.name)}'.replace(
-            str(f_input.suffix), '.gif')
-    else:
-        video = (VideoFileClip(str(f_input))).subclip(
-            f_starttime, f_endtime).resize(resize[f_measure])
+        # We want related gif material in one folder, so the output doesn't become a mess.
+        final_folder = self.f_output.joinpath(file.stem)
+        Path(final_folder).mkdir(parents=True, exist_ok=True)
 
-        new_filename = str(f_input.name).replace(
-            str(f_input.suffix), '.gif')
+        final_output = final_folder.joinpath(new_filename)
+        final_file = CompositeVideoClip([video])
+        final_file.write_gif(
+            str(final_output), fps=self.f_fps if self.f_fps else video.fps)
 
-    final_output = f_output.joinpath(new_filename)
-    final_file = CompositeVideoClip([video])
-
-    if f_overwrite or check_overwrite(final_output):
-        final_file.write_gif(str(final_output), fps=f_fps)
-
-    # video.reader.close()
-    # video.audio.reader.close_proc()
+    def gif_processor(self):
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            executor.map(self.process_gif, self.files)
 
 
 if __name__ == '__main__':
