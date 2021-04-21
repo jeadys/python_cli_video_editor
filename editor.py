@@ -16,6 +16,7 @@ def argument_parser():
     parent_parser.add_argument('-i', '--input')
     parent_parser.add_argument('-o', '--output')
     parent_parser.add_argument('--overwrite', action='store_true')
+    parent_parser.add_argument('-b', '--bulk', action='store_true')
     parent_parser.add_argument('--fps', type=int)
 
     main_parser = argparse.ArgumentParser()

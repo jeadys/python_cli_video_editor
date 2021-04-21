@@ -1,29 +1,37 @@
+import concurrent.futures
 from inspect import cleandoc
 from validations.overwrite import check_overwrite
 from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 
 
-def create_watermark(f_input, f_output, v_position, h_position, f_measure, f_fps, f_overwrite):
-    resize = {
-        'small': 30,
-        'medium': 60,
-        'large': 90
-    }
+class Watermark:
+    def __init__(self, files, f_output, v_position, h_position, f_measure, f_fps, f_overwrite):
+        self.files = files
+        self.f_output = f_output
+        self.v_position = v_position
+        self.h_position = h_position
+        self.f_measure = f_measure
+        self.f_fps = f_fps
+        self.f_overwrite = f_overwrite
+        self.resize = {'small': 30, 'medium': 60, 'large': 90}
 
-    video = (VideoFileClip(str(f_input)))
+    def process_watermark(self, file):
+        video = (VideoFileClip(str(file)))
+        watermark = (ImageClip('assets/watermark.png')).set_duration(video.duration).resize(
+            height=self.resize[self.f_measure]).margin(right=8, top=8, left=8, bottom=8, opacity=0).set_pos((self.h_position, self.v_position))
 
-    watermark = (ImageClip('assets/watermark.png')).set_duration(video.duration).resize(
-        height=resize[f_measure]).margin(right=8, top=8, left=8, bottom=8, opacity=0).set_pos((h_position, v_position))
+        new_filename = f'watermark-{str(file.name)}'
+        final_output = self.f_output.joinpath(new_filename)
+        final_file = CompositeVideoClip([video, watermark])
+        final_file.write_videofile(
+            str(final_output), fps=self.f_fps if self.f_fps else video.fps)
 
-    new_filename = f'watermark-{str(f_input.name)}'
-    final_output = f_output.joinpath(new_filename)
-    final_file = CompositeVideoClip([video, watermark])
+        video.reader.close()
+        video.audio.reader.close_proc()
 
-    if f_overwrite or check_overwrite(final_output):
-        final_file.write_videofile(str(final_output), fps=f_fps)
-
-    video.reader.close()
-    video.audio.reader.close_proc()
+    def watermark_processor(self):
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            executor.map(self.process_watermark, self.files)
 
 
 if __name__ == '__main__':
