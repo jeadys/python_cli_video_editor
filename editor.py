@@ -38,15 +38,15 @@ def argument_parser():
     gif_parser.add_argument('-e', '--end', nargs='?',
                             default='00:00:10', const='00:00:10')
     gif_parser.add_argument('-m', '--measure', nargs='?',
-                            default='small', const='small', help='choices: small, medium, large')
+                            default='small', const='small', choices=['small', 'medium', 'large'])
     gif_parser.add_argument('--sway', action='store_true')
 
     watermark_parser = feature_subparsers.add_parser(
         'watermark', parents=[parent_parser])
     watermark_parser.add_argument('-p', '--position', nargs='?',
-                                  default='bottom_right', const='bottom_right', help='choices: top_left, top_right, bottom_left, bottom_right')
+                                  default='bottom_right', const='bottom_right', choices=['top_left', 'top_right', 'bottom_left', 'bottom_right'])
     watermark_parser.add_argument('-m', '--measure', nargs='?',
-                                  default='small', const='small', help='choices: small, medium, large')
+                                  default='small', const='small', choices=['small', 'medium', 'large'])
 
     cut_parser = feature_subparsers.add_parser(
         'cut', parents=[parent_parser])

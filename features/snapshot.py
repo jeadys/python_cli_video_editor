@@ -19,7 +19,7 @@ class Snapshot:
             new_filename = f'snapshot_{interval}_{str(file.name)}'.replace(
                 str(file.suffix), '.jpg')
 
-            # # We want snapshots of a video together in one folder, so the output doesn't become a mess.
+            # We want snapshots of a video together in one folder, so the output doesn't become a mess.
             final_folder = self.f_output.joinpath(file.stem)
             Path(final_folder).mkdir(parents=True, exist_ok=True)
 
