@@ -1,6 +1,6 @@
 from pathlib import Path
 from inspect import cleandoc
-from features.gif import create_gif
+from features.gif import Gif
 from features.cut import Cut
 from validations.colors import Color
 from validations.convert import convert_to_seconds, convert_to_hms
@@ -77,7 +77,7 @@ class Validate:
     def check_time(self):
         if self.f_starttime is not False and self.f_endtime is not False:
             if self.f_starttime >= 0 and self.f_starttime < self.video_duration and self.f_endtime > 0 and self.f_endtime < self.video_duration and self.f_starttime < self.f_endtime:
-                return create_gif(self.f_input, self.f_output, self.f_starttime, self.f_endtime, self.f_measure, self.sway, self.f_fps, self.f_overwrite)
+                return Gif(self.files, self.f_output, self.f_starttime, self.f_endtime, self.f_measure, self.sway, self.f_fps, self.f_overwrite).gif_processor()
 
         return error_message_time(self.f_starttime, self.f_endtime, self.video_duration)
 

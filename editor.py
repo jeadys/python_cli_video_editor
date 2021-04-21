@@ -70,6 +70,10 @@ def argument_parser():
         print(cleandoc(f'''
         {Color.WARNING}missing -i OR --input argument{Color.ENDC}'''))
         sys.exit()
+    elif args.command == 'gif' and args.bulk:
+        print(cleandoc(f'''
+        {Color.WARNING}gif feature doesn't support bulk manipulation.{Color.ENDC}'''))
+        sys.exit()
     elif args.output is None:
         args.output = BASE_DIR.joinpath('output', args.command)
 
