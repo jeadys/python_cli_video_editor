@@ -7,7 +7,7 @@ from validations.convert import convert_to_seconds, convert_to_hms
 from moviepy.editor import VideoFileClip
 from features.audio.export import export_audio
 from features.watermark import Watermark
-from features.snapshot import create_snapshot
+from features.snapshot import Snapshot
 
 
 def classInfo():
@@ -75,7 +75,7 @@ class Validate:
         elif self.command == 'audio':
             return export_audio(self.video, self.f_input, self.f_output, self.f_overwrite)
         elif self.command == 'snapshot':
-            return create_snapshot(self.video, self.f_input, self.f_output, self.video_duration, self.f_interval, self.f_overwrite)
+            return Snapshot(self.files, self.f_output, self.f_interval, self.f_overwrite).snapshot_processor()
         return False
 
     def check_measurement(self):
