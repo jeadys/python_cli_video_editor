@@ -55,7 +55,8 @@ def argument_parser():
 
     audio_parser = feature_subparsers.add_parser(
         'audio', parents=[parent_parser])
-    audio_parser.add_argument('--export', action='store_true')
+    audio_parser.add_argument('--export', type=str, nargs='?',
+                              default='.wav', const='.wav', choices=['.wav', '.mp3'])
 
     snapshot_parser = feature_subparsers.add_parser(
         'snapshot', parents=[parent_parser])

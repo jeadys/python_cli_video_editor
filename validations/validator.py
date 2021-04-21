@@ -5,7 +5,7 @@ from features.cut import Cut
 from validations.colors import Color
 from validations.convert import convert_to_seconds, convert_to_hms
 from moviepy.editor import VideoFileClip
-from features.audio.export import export_audio
+from features.audio.export import Audio
 from features.watermark import Watermark
 from features.snapshot import Snapshot
 
@@ -42,6 +42,8 @@ class Validate:
             self.f_parts = value['parts']
         if self.command == 'snapshot':
             self.f_interval = value['interval']
+        if self.command == 'audio':
+            self.audio_format = value['export']
 
     def check_path(self):
         Path(self.f_output).mkdir(parents=True, exist_ok=True)
@@ -73,7 +75,7 @@ class Validate:
         elif self.command == 'cut':
             return Cut(self.files, self.f_output, self.f_parts, self.f_fps, self.f_overwrite).cut_processor()
         elif self.command == 'audio':
-            return export_audio(self.video, self.f_input, self.f_output, self.f_overwrite)
+            return Audio(self.files, self.audio_format, self.f_output, self.f_overwrite).audio_processor()
         elif self.command == 'snapshot':
             return Snapshot(self.files, self.f_output, self.f_interval, self.f_overwrite).snapshot_processor()
         return False
