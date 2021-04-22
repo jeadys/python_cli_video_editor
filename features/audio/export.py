@@ -24,8 +24,7 @@ class Audio:
         final_output = final_folder.joinpath(new_filename)
         audio.write_audiofile(str(final_output))
 
-        video.reader.close()
-        video.audio.reader.close_proc()
+        video.close()
 
     def audio_processor(self):
         with concurrent.futures.ProcessPoolExecutor() as executor:
