@@ -26,8 +26,7 @@ class Snapshot:
             final_output = final_folder.joinpath(new_filename)
             video.save_frame(str(final_output), t=interval)
 
-            video.reader.close()
-            video.audio.reader.close_proc()
+        video.close()
 
     def snapshot_processor(self):
         with concurrent.futures.ProcessPoolExecutor() as executor:

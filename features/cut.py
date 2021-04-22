@@ -15,8 +15,8 @@ class Cut:
         self.f_overwrite = f_overwrite
 
     def process_cut(self, file):
-        video_file = VideoFileClip(str(file))
-        video_duration = round(video_file.duration)
+        video = VideoFileClip(str(file))
+        video_duration = round(video.duration)
         part_duration = 0
         start_part = [0]
         end_part = []
@@ -27,9 +27,8 @@ class Cut:
             end_part.append(round(part_duration, 2))
 
         for f_part in range(int(self.f_parts)):
-            video = VideoFileClip(str(file)).subclip(
+            video = video.subclip(
                 (start_part[int(f_part)]), (end_part[int(f_part)]))
-
             new_filename = f'part_{f_part + 1}_of_{self.f_parts}_{file.name}'
 
             # We want parts of a video together in one folder, so the output doesn't become a mess.
@@ -39,10 +38,9 @@ class Cut:
             final_output = final_folder.joinpath(new_filename)
             final_file = CompositeVideoClip([video])
             final_file.write_videofile(
-                str(final_output), fps=self.f_fps if self.f_fps else video_file.fps)
+                str(final_output), fps=self.f_fps if self.f_fps else video.fps)
 
-            video.reader.close()
-            video.audio.reader.close_proc()
+        video.close()
 
     def cut_processor(self):
         with concurrent.futures.ProcessPoolExecutor() as executor:

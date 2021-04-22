@@ -32,8 +32,7 @@ class Watermark:
         final_file.write_videofile(
             str(final_output), fps=self.f_fps if self.f_fps else video.fps)
 
-        video.reader.close()
-        video.audio.reader.close_proc()
+        video.close()
 
     def watermark_processor(self):
         with concurrent.futures.ProcessPoolExecutor() as executor:
