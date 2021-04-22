@@ -30,7 +30,7 @@ class Cut:
             video = VideoFileClip(str(file)).subclip(
                 (start_part[int(f_part)]), (end_part[int(f_part)]))
 
-            new_filename = f'part_{f_part + 1}_of_{self.f_parts}_{str(file.name)}'
+            new_filename = f'part_{f_part + 1}_of_{self.f_parts}_{file.name}'
 
             # We want parts of a video together in one folder, so the output doesn't become a mess.
             final_folder = self.f_output.joinpath(file.stem)

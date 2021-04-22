@@ -21,7 +21,7 @@ class Watermark:
         watermark = ImageClip('assets/watermark.png').set_duration(video.duration).resize(
             height=self.resize[self.f_measure]).margin(right=8, top=8, left=8, bottom=8, opacity=0).set_pos((self.h_position, self.v_position))
 
-        new_filename = f'watermarked_{self.v_position}_{self.h_position}_{str(file.name)}'
+        new_filename = f'watermarked_{self.v_position}_{self.h_position}_{file.name}'
 
         # We want related video material in one folder, so the output doesn't become a mess.
         final_folder = self.f_output.joinpath(file.stem)

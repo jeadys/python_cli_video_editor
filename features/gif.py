@@ -26,11 +26,9 @@ class Gif:
 
         if self.sway:
             video = video.fx(self.time_symetrize)
-            new_filename = f'sway_{str(file.name)}'.replace(
-                str(file.suffix), '.gif')
+            new_filename = f'sway_{file.name}'.replace(file.suffix, '.gif')
         else:
-            new_filename = str(file.name).replace(
-                str(file.suffix), '.gif')
+            new_filename = file.name.replace(file.suffix, '.gif')
 
         # We want related gif material in one folder, so the output doesn't become a mess.
         final_folder = self.f_output.joinpath(file.stem)
