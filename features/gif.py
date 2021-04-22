@@ -1,7 +1,10 @@
-import concurrent.futures
 from pathlib import Path
 from inspect import cleandoc
-from validations.overwrite import check_overwrite
+from concurrent.futures import ProcessPoolExecutor
+
+from helpers.info import class_info
+from helpers.overwrite import check_overwrite
+
 from moviepy.editor import VideoFileClip, CompositeVideoClip, concatenate_videoclips, vfx
 
 
@@ -39,12 +42,9 @@ class Gif:
         video.close()
 
     def gif_processor(self):
-        with concurrent.futures.ProcessPoolExecutor() as executor:
+        with ProcessPoolExecutor() as executor:
             executor.map(self.process_gif, self.files)
 
 
 if __name__ == '__main__':
-    print(cleandoc(f'''
-        Make a gif from your videos.
-        python editor.py gif -h, for more info
-    '''))
+    class_info(Gif)

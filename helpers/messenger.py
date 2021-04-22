@@ -1,4 +1,4 @@
-from validations.colors import Color
+from helpers.colors import Color
 
 
 def error_message_time(f_starttime, f_endtime, video_duration):
