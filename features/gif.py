@@ -2,7 +2,7 @@ import concurrent.futures
 from pathlib import Path
 from inspect import cleandoc
 from validations.overwrite import check_overwrite
-from moviepy.editor import VideoFileClip, CompositeVideoClip, concatenate, vfx
+from moviepy.editor import VideoFileClip, CompositeVideoClip, concatenate_videoclips, vfx
 
 
 class Gif:
@@ -17,15 +17,12 @@ class Gif:
         self.f_overwrite = f_overwrite
         self.resize = {'small': 0.3, 'medium': 0.6, 'large': 0.9}
 
-    def time_symetrize(self, video):
-        return concatenate([video, video.fx(vfx.time_mirror)])
-
     def process_gif(self, file):
         video = VideoFileClip(str(file)).subclip(
             self.f_starttime, self.f_endtime).resize(self.resize[self.f_measure])
 
         if self.sway:
-            video = video.fx(self.time_symetrize)
+            video = concatenate_videoclips([video, video.fx(vfx.time_mirror)])
             new_filename = f'sway_{file.name}'.replace(file.suffix, '.gif')
         else:
             new_filename = file.name.replace(file.suffix, '.gif')
@@ -38,6 +35,8 @@ class Gif:
         final_file = CompositeVideoClip([video])
         final_file.write_gif(
             str(final_output), fps=self.f_fps if self.f_fps else video.fps)
+
+        video.close()
 
     def gif_processor(self):
         with concurrent.futures.ProcessPoolExecutor() as executor:

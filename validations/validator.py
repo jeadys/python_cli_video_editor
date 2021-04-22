@@ -78,10 +78,10 @@ class Validate:
         video.close()
 
         if self.f_starttime is not False and self.f_endtime is not False:
-            if self.f_starttime >= 0 and self.f_starttime < self.video_duration and self.f_endtime > 0 and self.f_endtime < self.video_duration and self.f_starttime < self.f_endtime:
+            if self.f_starttime >= 0 and self.f_starttime < video_duration and self.f_endtime > 0 and self.f_endtime < video_duration and self.f_starttime < self.f_endtime:
                 return Gif(self.files, self.f_output, self.f_starttime, self.f_endtime, self.f_measure, self.sway, self.f_fps, self.f_overwrite).gif_processor()
 
-        return error_message_time(self.f_starttime, self.f_endtime, self.video_duration)
+        return error_message_time(self.f_starttime, self.f_endtime, video_duration)
 
 
 if __name__ == '__main__':
