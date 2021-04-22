@@ -1,7 +1,10 @@
 from pathlib import Path
-import concurrent.futures
+from concurrent.futures import ProcessPoolExecutor
+
+from helpers.info import class_info
+from helpers.overwrite import check_overwrite
+
 from moviepy.editor import VideoFileClip
-from validations.overwrite import check_overwrite
 
 
 class Snapshot:
@@ -29,5 +32,9 @@ class Snapshot:
         video.close()
 
     def snapshot_processor(self):
-        with concurrent.futures.ProcessPoolExecutor() as executor:
+        with ProcessPoolExecutor() as executor:
             executor.map(self.process_snapshot, self.files)
+
+
+if __name__ == '__main__':
+    class_info(Snapshot)

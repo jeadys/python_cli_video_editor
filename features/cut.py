@@ -1,8 +1,11 @@
-import concurrent.futures
 from pathlib import Path
 from inspect import cleandoc
 from datetime import datetime
-from validations.overwrite import check_overwrite
+from concurrent.futures import ProcessPoolExecutor
+
+from helpers.info import class_info
+from helpers.overwrite import check_overwrite
+
 from moviepy.editor import VideoFileClip, CompositeVideoClip
 
 
@@ -43,12 +46,9 @@ class Cut:
         video.close()
 
     def cut_processor(self):
-        with concurrent.futures.ProcessPoolExecutor() as executor:
+        with ProcessPoolExecutor() as executor:
             executor.map(self.process_cut, self.files)
 
 
 if __name__ == '__main__':
-    print(cleandoc(f'''
-        Cut video into multiple parts.
-        python editor.py cut -h, for more info
-    '''))
+    class_info(Cut)

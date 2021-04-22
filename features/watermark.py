@@ -1,7 +1,10 @@
-import concurrent.futures
 from pathlib import Path
 from inspect import cleandoc
-from validations.overwrite import check_overwrite
+from concurrent.futures import ProcessPoolExecutor
+
+from helpers.info import class_info
+from helpers.overwrite import check_overwrite
+
 from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 
 
@@ -35,12 +38,9 @@ class Watermark:
         video.close()
 
     def watermark_processor(self):
-        with concurrent.futures.ProcessPoolExecutor() as executor:
+        with ProcessPoolExecutor() as executor:
             executor.map(self.process_watermark, self.files)
 
 
 if __name__ == '__main__':
-    print(cleandoc(f'''
-        Add a watermark to your videos.
-        python editor.py watermark -h, for more info
-    '''))
+    class_info(Watermark)

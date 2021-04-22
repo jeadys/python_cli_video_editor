@@ -1,22 +1,18 @@
 from pathlib import Path
 from inspect import cleandoc
+
 from features.gif import Gif
 from features.cut import Cut
-from validations.colors import Color
-from validations.convert import convert_to_seconds, convert_to_hms
-from validations.messenger import error_message_time
-from moviepy.editor import VideoFileClip
+from features.snapshot import Snapshot
 from features.audio.export import Audio
 from features.watermark import Watermark
-from features.snapshot import Snapshot
 
+from helpers.colors import Color
+from helpers.info import class_info
+from helpers.messenger import error_message_time
+from helpers.convert import convert_to_seconds, convert_to_hms
 
-def classInfo():
-    method_list = [attribute for attribute in dir(Validate) if callable(
-        getattr(Validate, attribute)) and attribute.startswith('__') is False]
-
-    for method in method_list:
-        print(method)
+from moviepy.editor import VideoFileClip
 
 
 class Validate:
@@ -85,4 +81,4 @@ class Validate:
 
 
 if __name__ == '__main__':
-    classInfo()
+    class_info(Validate)

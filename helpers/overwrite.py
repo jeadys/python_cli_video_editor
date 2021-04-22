@@ -1,6 +1,7 @@
 from pathlib import Path
 from inspect import cleandoc
-from validations.colors import Color
+
+from helpers.colors import Color
 
 
 def check_overwrite(final_output):
