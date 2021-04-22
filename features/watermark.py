@@ -17,8 +17,8 @@ class Watermark:
         self.resize = {'small': 30, 'medium': 60, 'large': 90}
 
     def process_watermark(self, file):
-        video = (VideoFileClip(str(file)))
-        watermark = (ImageClip('assets/watermark.png')).set_duration(video.duration).resize(
+        video = VideoFileClip(str(file))
+        watermark = ImageClip('assets/watermark.png').set_duration(video.duration).resize(
             height=self.resize[self.f_measure]).margin(right=8, top=8, left=8, bottom=8, opacity=0).set_pos((self.h_position, self.v_position))
 
         new_filename = f'watermarked_{self.v_position}_{self.h_position}_{str(file.name)}'

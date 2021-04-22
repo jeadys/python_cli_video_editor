@@ -27,8 +27,8 @@ class Cut:
             end_part.append(round(part_duration, 2))
 
         for f_part in range(int(self.f_parts)):
-            video = (VideoFileClip(str(file))
-                     .subclip((start_part[int(f_part)]), (end_part[int(f_part)])))
+            video = VideoFileClip(str(file)).subclip(
+                (start_part[int(f_part)]), (end_part[int(f_part)]))
 
             new_filename = f'part_{f_part + 1}_of_{self.f_parts}_{str(file.name)}'
 

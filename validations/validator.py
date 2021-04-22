@@ -25,8 +25,6 @@ class Validate:
         self.f_input = Path(value['input'])
         self.f_output = Path(value['output'])
         self.f_overwrite = value['overwrite']
-        self.video = VideoFileClip(str(self.f_input))
-        self.video_duration = round(self.video.duration)
         self.bulk = value['bulk']
         self.f_fps = value['fps']
         self.files = None
@@ -75,6 +73,10 @@ class Validate:
         return False
 
     def check_time(self):
+        video = VideoFileClip(str(self.f_input))
+        video_duration = round(video.duration)
+        video.close()
+
         if self.f_starttime is not False and self.f_endtime is not False:
             if self.f_starttime >= 0 and self.f_starttime < self.video_duration and self.f_endtime > 0 and self.f_endtime < self.video_duration and self.f_starttime < self.f_endtime:
                 return Gif(self.files, self.f_output, self.f_starttime, self.f_endtime, self.f_measure, self.sway, self.f_fps, self.f_overwrite).gif_processor()
