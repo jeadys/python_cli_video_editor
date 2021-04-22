@@ -30,7 +30,7 @@ class Watermark:
         final_output = final_folder.joinpath(new_filename)
         final_file = CompositeVideoClip([video, watermark])
         final_file.write_videofile(
-            str(final_output), fps=self.f_fps if self.f_fps else video.fps)
+            str(final_output), fps=self.f_fps if self.f_fps else video.fps, temp_audiofile=Path(final_folder.joinpath(f'{file.stem}_TEMP_FILE.mp3')))
 
         video.close()
 
