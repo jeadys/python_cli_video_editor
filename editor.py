@@ -32,6 +32,7 @@ def argument_parser():
 
     # Each subparser (subcommand) has parent defined to get access to the parent's commands within that subparser (subcommand).
 
+    # GIF FEATURE
     gif_parser = feature_subparsers.add_parser(
         'gif', parents=[parent_parser])
     gif_parser.add_argument('-s', '--start', nargs='?',
@@ -42,6 +43,7 @@ def argument_parser():
                             default='small', const='small', choices=['small', 'medium', 'large'])
     gif_parser.add_argument('--sway', action='store_true')
 
+    # WATERMARK FEATURE
     watermark_parser = feature_subparsers.add_parser(
         'watermark', parents=[parent_parser])
     watermark_parser.add_argument('-p', '--position', nargs='?',
@@ -49,16 +51,19 @@ def argument_parser():
     watermark_parser.add_argument('-m', '--measure', nargs='?',
                                   default='small', const='small', choices=['small', 'medium', 'large'])
 
+    # CUT FEATURE
     cut_parser = feature_subparsers.add_parser(
         'cut', parents=[parent_parser])
     cut_parser.add_argument('-p', '--parts', type=int, nargs='?',
                             default=2, const=2)
 
+    # AUDIO FEATURE
     audio_parser = feature_subparsers.add_parser(
         'audio', parents=[parent_parser])
     audio_parser.add_argument('--export', type=str, nargs='?',
                               default='.wav', const='.wav', choices=['.wav', '.mp3'])
 
+    # SNAPSHOT FEATURE
     snapshot_parser = feature_subparsers.add_parser(
         'snapshot', parents=[parent_parser])
     snapshot_parser.add_argument('--interval', type=int, nargs='?',

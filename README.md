@@ -1,9 +1,10 @@
 # Video editing through CLI
-
+LAST README UPDATE: APRIL 23, 2021 <br />
 ## About
 This repo has many functionalities that can be used to edit/manipulate your videos.
 Libraries/modules such as [MoviePy](https://github.com/Zulko/moviepy)
-and [FFMPEG](https://github.com/FFmpeg/FFmpeg) are being used to get most of the work done.
+and [FFMPEG](https://github.com/FFmpeg/FFmpeg) are being used to get most of the work done. <br />
+Video manipulation can be done in singular or bulk!
 
 Also interested in image editing? Check out [python_cli_image_editor](https://github.com/YassinAO/python_cli_image_editor)
 
@@ -11,7 +12,6 @@ Also interested in image editing? Check out [python_cli_image_editor](https://gi
 * Python v.3+
 * MoviePy
 * FFMPEG
-* PyGame (If you want to see previews)
 
 ## Install
 ```
@@ -21,7 +21,8 @@ $ pip install -r requirements.txt
 ```
 
 ## Usage / Examples
-You can leave the -o OR --output argument out of the command to use the default location. Folder named 'output' within this project. 
+You can leave the -o OR --output argument out of the command to use the default location. Folder named 'output' within this project. <br />
+Using the --bulk argument will require a folder directory as input so each video file within the folder will be targeted.
 ### create gif
 
 ```
@@ -40,7 +41,7 @@ You can leave the -o OR --output argument out of the command to use the default 
 
 ### export audio from video
 ```
-     $ python editor.py audio --input C:\Users\John\Desktop\Intro.mp4 --output C:\Users\John\Desktop\ --export 
+     $ python editor.py audio --input C:\Users\John\Desktop\Intro.mp4 --output C:\Users\John\Desktop\ --export .wav
 ```
 
 ### make video snapshots
@@ -50,7 +51,7 @@ You can leave the -o OR --output argument out of the command to use the default 
 
 ## Commands
 ```
-The main arguments are used in combination with the subcommands/arguments
+The main arguments are used in combination with the subcommand arguments
 
 required main arguments:
     -i, --input            absolute path to file, tip [drag & drop a file in the terminal to get the path]
@@ -69,11 +70,12 @@ optional main arguments:
 
     --fps                  set new fps for video
                            (e.g.) --fps 30
-    
-
-    --preview              see preview of edit [no values needed]
-                           (e.g.) --preview 
-    
+                           default = current fps
+     
+     -b, --bulk            manipulate multiple videos at once, requires folder directory for the --input argument
+                           (e.g.) --bulk
+```
+```
 optional arguments gif subcommand:
 
     gif                    allows use of the gif feature and the subcommands
@@ -93,8 +95,8 @@ optional arguments gif subcommand:
     
     --sway                 plays the gif forward then backward [no values needed]
                            (e.g.) --sway
-
-
+```
+```
 optional arguments watermark subcommand:
 
     watermark              allows use of the watermark feature and the subcommands
@@ -107,7 +109,8 @@ optional arguments watermark subcommand:
     -m --measure           size of the watermark, options [small, medium, large]
                            (e.g.) --measure large
                            default = small                           
-
+```
+```
 optional arguments cut subcommand:
 
     cut                    allows use of the cut feature and the subcommands
@@ -116,15 +119,18 @@ optional arguments cut subcommand:
     -p --parts             The amount of video parts you want to cut the video in
                            (e.g.) --parts 6
                            default = 2
-
+```
+```
 optional arguments audio subcommand:
 
     audio                  allows use of the audio feature and the subcommands
                            audio <subcommands>
 
     --export               export the audio from a video [no values needed]
-                           (e.g.) --export
-
+                           (e.g.) --export .wav
+                           default = .wav
+```
+```
 optional arguments snapshot subcommand:
 
     snapshot               allows use of the snapshot feature and the subcommands
@@ -133,15 +139,19 @@ optional arguments snapshot subcommand:
     --interval             the interval in seconds when you want to make snaphots from the video
                            (e.g.) --interval 10
                            default = 1
-
 ```
 
 ## Current functionalities
-* Add watermark to video [option to choose size & position of watermark]
-* Create gif from video  [option to choose size, type & start/endtime of gif]
-* Cut video in to multiple parts
-* Export audio from video
-* Make snapshots from video
+* Add watermark to video(s) [option to choose size & position of watermark]
+* Create gif from video(s)  [option to choose size, type & start/endtime of gif]
+* Cut video(s) in to multiple parts
+* Export audio from video(s)
+* Make snapshots from video(s)
+* Multiprocessing for every feature to speed up process time
 
 ## Future functionalities
 * A lot...
+* Error handling for bulk manipulation (if one fails, keep going and create log for the ones that didn't finish)
+* Better video compression
+* Create different video quality formats (from highest to lowest e.g 4k > 2k > 1080 > 720 > 360)
+* More will be added to the list...

@@ -1,5 +1,12 @@
 from inspect import cleandoc
 
+"""
+class_info is used when a file is directly executed such as a feature class.
+This is done by using __name__ == '__main__'
+class_info provides some extra information about the class such as functions within the class and the help command.
+
+"""
+
 
 def class_info(my_class):
     method_list = [attribute for attribute in dir(my_class) if callable(

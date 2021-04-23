@@ -1,5 +1,10 @@
 import datetime
 
+"""
+The --start and --end arguments are passed in HH:MM:SS format. 
+MoviePy requires input in seconds, so this convertion is needed.
+"""
+
 
 def convert_to_seconds(time_str):
     try:

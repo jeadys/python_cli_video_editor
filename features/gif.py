@@ -7,6 +7,19 @@ from helpers.overwrite import check_overwrite
 
 from moviepy.editor import VideoFileClip, CompositeVideoClip, concatenate_videoclips, vfx
 
+"""
+The gif functionality allows the end user to create gifs from a video.
+This is done by passing a start and end time of where the gif needs to take the frames from.
+
+This can be done in singular and bulk, with the help of multiprocessing technology this feature is sped up by a lot.
+
+Some extra attributes can be passed such as measure and the type of gif, see README.md for further details.
+
+*IMPORT*
+Each time the video file is opened and the manipulation is done it needs to be closed!
+This is to avoid errors like too many files open.
+"""
+
 
 class Gif:
     def __init__(self, files, f_output, f_starttime, f_endtime, f_measure, sway, f_fps, f_overwrite):

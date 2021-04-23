@@ -3,6 +3,13 @@ from inspect import cleandoc
 
 from helpers.colors import Color
 
+"""
+check_overwrite is used when files are written on the end users machine.
+This will check if the file already exists on their machine.
+
+This check can be skipped for all files if the --overwrite argument is passed.
+"""
+
 
 def check_overwrite(final_output):
     print(cleandoc(f'''
