@@ -6,6 +6,13 @@ from inspect import cleandoc
 from helpers.colors import Color
 from helpers.validator import Validate
 
+"""
+argument_parser is used to give the end user the option to run commands from the CLI (command line interface)
+The argument_parser exists of a parent parser that has all main arguments that can be used in combination with the subparsers (subcommands)
+A subparser (subcommand) exists of their own arguments that can be passed, these can be required or optional.
+When a command is ran it executes the feature linked to the subcommand. 
+"""
+
 
 def argument_parser():
     BASE_DIR = Path(__file__).resolve().parent
@@ -13,7 +20,12 @@ def argument_parser():
     parent_parser = argparse.ArgumentParser(
         prog='Python CLI Video Editor', description='An application to modify vids and more, Made By https://github.com/YassinAO/', add_help=False
     )
-    # These commands can be used with any subcommand.
+
+    """
+    These commands can be used with any subcommand.
+    'input' is necessary to manipulate the targeted video(s).
+    The other ones are optional.
+    """
     parent_parser.add_argument('-i', '--input')
     parent_parser.add_argument('-o', '--output')
     parent_parser.add_argument('--overwrite', action='store_true')
@@ -22,15 +34,30 @@ def argument_parser():
 
     main_parser = argparse.ArgumentParser()
 
+    """
+    'dest' is defined to see which subcommand is being used.
+    This is important because it tells the script which feature to execute.
+    """
     feature_subparsers = main_parser.add_subparsers(
-        help='sub-command help', title='actions', dest='command')  # Dest is defined to see which subcommand is being used.
+        help='sub-command help', title='actions', dest='command')
 
-    # Some arguments within the subcommand have nargs, default & const defined.
-    # nargs is for 0 or 1 argument expected.
-    # default is used when argument isn't specified.
-    # const is used when argument is specified but no value given.
+    """
+    Some arguments within the subcommand have 'nargs', 'default', 'const' & 'choices' defined.
+    
+        - 'nargs' is used to specify the amount of arguments expected. '?' indicates 0 or 1.
+        - 'default' is used when argument isn't specified.
+        - 'const' is used when argument is specified but no value given.
+        - 'choices' are the values the end user can choose from.
 
-    # Each subparser (subcommand) has parent defined to get access to the parent's commands within that subparser (subcommand).
+    'default' or 'const' will be passed as the value depending on the condition.
+    This is to avoid missing arguments for the executed feature.
+    """
+
+    """
+    A subparser (subcommand) has their own arguments.
+    The subparser also requires some conditions from the parent_parser,
+    so we define this in 'parents' to give it access to the parents arguments such as --input --output.
+    """
 
     # GIF FEATURE
     gif_parser = feature_subparsers.add_parser(
