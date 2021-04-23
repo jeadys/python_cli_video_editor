@@ -8,6 +8,18 @@ from helpers.overwrite import check_overwrite
 
 from moviepy.editor import VideoFileClip, CompositeVideoClip
 
+"""
+The cut functionality allows the end user to split their video(s) in to multiple parts.
+This is done by checking the video duration time and collecting the start and end time of each part.
+When part of the video file is written these start and end times are used to create the video part.
+
+This can be done in singular and bulk, with the help of multiprocessing technology this feature is sped up by a lot.
+
+*IMPORT*
+Each time the video file is opened and the manipulation is done it needs to be closed!
+This is to avoid errors like too many files open.
+"""
+
 
 class Cut:
     def __init__(self, files, f_output, f_parts, f_fps, f_overwrite):

@@ -1,5 +1,9 @@
 from helpers.colors import Color
 
+"""
+The --start and --end time arguments check, to avoid invalid time inputs
+"""
+
 
 def error_message_time(f_starttime, f_endtime, video_duration):
     if f_starttime is False or f_endtime is False:

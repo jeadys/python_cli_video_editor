@@ -14,6 +14,12 @@ from helpers.convert import convert_to_seconds, convert_to_hms
 
 from moviepy.editor import VideoFileClip
 
+"""
+This is the main class that passes all necessary arguments to the features.
+It has some checks before running the feature, such as checking if the input and output is valid.
+Files found in the input are retrieved and passed to the feature to start video manipulation.
+"""
+
 
 class Validate:
     def __init__(self, **value):
