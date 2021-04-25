@@ -110,7 +110,7 @@ def argument_parser():
     elif args.output is None:
         args.output = BASE_DIR.joinpath('output', args.command)
 
-    Validate(**args_dict).check_path()
+    return Validate(**args_dict).check_path()
 
 
 if __name__ == '__main__':
