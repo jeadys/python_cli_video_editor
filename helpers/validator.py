@@ -8,7 +8,7 @@ from features.audio.export import Audio
 from features.watermark import Watermark
 
 from helpers.colors import Color
-from helpers.info import class_info
+#from helpers.info import class_info
 from helpers.messenger import error_message_time
 from helpers.convert import convert_to_seconds, convert_to_hms
 
@@ -87,4 +87,4 @@ class Validate:
 
 
 if __name__ == '__main__':
-    class_info(Validate)
+    pass
