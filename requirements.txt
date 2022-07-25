@@ -9,7 +9,7 @@ imageio==2.9.0
 imageio-ffmpeg==0.4.3
 jedi==0.18.0
 moviepy==1.0.3
-numpy==1.20.1
+numpy==1.22.0
 parso==0.8.1
 pickleshare==0.7.5
 Pillow==9.0.1
