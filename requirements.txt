@@ -12,7 +12,7 @@ moviepy==1.0.3
 numpy==1.20.1
 parso==0.8.1
 pickleshare==0.7.5
-Pillow==8.1.2
+Pillow==9.0.1
 proglog==0.1.9
 prompt-toolkit==3.0.18
 pygame==2.0.1
